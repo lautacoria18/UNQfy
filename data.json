@@ -1,0 +1,139 @@
+{
+  "rootObjects": [
+    {
+      "id": "__00001__",
+      "name": null
+    }
+  ],
+  "objects": {
+    "__00001__": {
+      "artists": "__00002__",
+      "playlists": "__00003__",
+      "idGenerator": "__00004__"
+    },
+    "__00002__": {
+      "0": "__00005__",
+      "1": "__00006__"
+    },
+    "__00003__": {
+      "0": "__00007__"
+    },
+    "__00004__": {
+      "userId": 3,
+      "songId": 0,
+      "playlistId": 1,
+      "albumId": 3,
+      "trackId": 5
+    },
+    "__00005__": {
+      "name": "Pella",
+      "id": 1,
+      "albums": "__00008__"
+    },
+    "__00006__": {
+      "name": "Sumo",
+      "id": 3,
+      "albums": "__00009__"
+    },
+    "__00007__": {
+      "name": "La playlist pop",
+      "maxDuration": null,
+      "genres": "__00010__",
+      "tracks": "__00011__",
+      "id": 1,
+      "currentDuration": 0
+    },
+    "__00008__": {
+      "0": "__00012__"
+    },
+    "__00009__": {
+      "0": "__00013__"
+    },
+    "__00010__": {
+      "0": "100"
+    },
+    "__00011__": {},
+    "__00012__": {
+      "name": "Pella",
+      "year": null,
+      "tracks": "__00014__",
+      "id": 2
+    },
+    "__00013__": {
+      "name": "Album 1",
+      "year": 1980,
+      "tracks": "__00015__",
+      "id": 3
+    },
+    "__00014__": {
+      "0": "__00016__",
+      "1": "__00017__"
+    },
+    "__00015__": {
+      "0": "__00018__",
+      "1": "__00019__",
+      "2": "__00020__"
+    },
+    "__00016__": {
+      "name": "El album de pella",
+      "duration": 33,
+      "genres": "[Pop,Rock]",
+      "id": null,
+      "timesPlayed": 0
+    },
+    "__00017__": {
+      "name": "La cancion de pella",
+      "duration": 33,
+      "genres": "[Pop,Rock]",
+      "id": 1,
+      "timesPlayed": 0,
+      "albumID": "2"
+    },
+    "__00018__": {
+      "name": "Cancion 1",
+      "duration": 33,
+      "genres": "[Pop]",
+      "id": 3,
+      "timesPlayed": 0,
+      "albumID": "3"
+    },
+    "__00019__": {
+      "name": "Cancion 2",
+      "duration": 66,
+      "genres": "[Pop]",
+      "id": 4,
+      "timesPlayed": 0,
+      "albumID": "3"
+    },
+    "__00020__": {
+      "name": "Cancion 3",
+      "duration": 66,
+      "genres": "[Pop]",
+      "id": 5,
+      "timesPlayed": 0,
+      "albumID": "3"
+    }
+  },
+  "types": {
+    "__00001__": "UNQfy",
+    "__00002__": "Array",
+    "__00003__": "Array",
+    "__00004__": "IdGenerator",
+    "__00005__": "Artist",
+    "__00006__": "Artist",
+    "__00007__": "Playlist",
+    "__00008__": "Array",
+    "__00009__": "Array",
+    "__00010__": "Array",
+    "__00011__": "Array",
+    "__00012__": "Album",
+    "__00013__": "Album",
+    "__00014__": "Array",
+    "__00015__": "Array",
+    "__00016__": "Track",
+    "__00017__": "Track",
+    "__00018__": "Track",
+    "__00019__": "Track",
+    "__00020__": "Track"
+  }
+}
