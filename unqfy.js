@@ -49,11 +49,11 @@ class UNQfy {
 
       artist.addNewAlbum(album);
       return album;
-      console.log("The new album " + album.name + " has registered with succes!.");
+      console.log("The new album " + album.name + " has registered with succes!."); 
     }
   }
    else{
-     console.log("The artist is not registered in the system!")
+    throw Error('The artist is not registered');
    }
     }
   
@@ -155,7 +155,7 @@ class UNQfy {
       return this.getArtistByName(artistName).getTracks(); 
         }
         else {
-          console.log("There is no artist with that name");
+          throw Error('There is no artist with that name');
         }
 
   }
@@ -273,7 +273,7 @@ class UNQfy {
       console.log('The artist ' + artistName + ' has been deleted!');
     }
     else{
-      throw Error('The artist is not registered!'); //modificar
+      throw Error('The artist is not registered!'); //ok
     }
 
 
@@ -294,7 +294,7 @@ class UNQfy {
         }
         else {
 
-          console.log('The album is not registered')
+          throw Error ('The album is not registered!')
         }
 
 
