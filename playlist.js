@@ -24,10 +24,10 @@ hasTrack(track){
 
 addTrack(track){
     if(!this.hasTrack(track)){
-        let duration = this.duration() + track.duration;
-        if(duration <= this.maxDuration){
+        let cDuration = this.duration() + track.duration;
+        if(cDuration < this.maxDuration){
             this.tracks.push(track);
-            this.currentDuration = duration;
+            this.currentDuration = cDuration;
         }else{
             console.log('No se pudo agregar el track ' + track.name + ' debido a que supera el limite de duración de la playlist.')
         }

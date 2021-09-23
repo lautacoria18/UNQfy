@@ -69,16 +69,9 @@ function addArtist(unqfy, name, country) {
 
 function addAlbum(unqfy,id,albumName,albumYear){
 
-  try{
+
     unqfy.addAlbum(id,{name:albumName,year:parseInt(albumYear)})
-  }
-  catch(e){
-   if(e.name === "AlbumExistError"){
-      handleError(e)
-   }else{
-     throw e
-   } 
-  }
+
   saveUNQfy(unqfy)
 }
 
@@ -96,36 +89,25 @@ function allAlbums(unqfy){
 
 function removeArtist(unqfy,artistName){
  
-  try{
     unqfy.removeArtist(artistName)
-  }catch(e){
-    if(e.name === "ArtistDontExistError"){
-      handleError(e)
-    }else{
-      throw e
-    }
-  }
+
+  
   saveUNQfy(unqfy)
 }
 
-function createPlaylist(unqfy,name,maxDuration, genresToInclude){
+function createPlaylist(unqfy,name,genresToInclude, maxDuration){
   
-  unqfy.createPlaylist(name,genresToInclude,parseInt(maxDuration))
+  unqfy.createPlaylist(name,genresToInclude,maxDuration)
   saveUNQfy(unqfy)
 }
 
 
 function removeAlbum(unqfy,artistName,albumName){
  
-  try{
+  
     unqfy.removeAlbum(artistName,albumName)
-  }catch(e){
-    if(e.name === "AlbumDontExistError"){
-      handleError(e)
-    }else{
-      throw e
-    }
-  }
+  
+  
   saveUNQfy(unqfy)
 }
 
@@ -158,30 +140,39 @@ function albumsByArtistName(unqfy,artistName){
   console.log(unqfy.getAlbumsByArtistName(artistName))
 }
 
-function addTrack(unqfy,albumName,trackName,trackDuration,trackGenre){
+function addTrack(unqfy,idAlbum,trackName,trackDuration,trackGenre){
 
-    unqfy.addTrack(albumName,{name:trackName,duration:parseInt(trackDuration),genres:trackGenre});
+  try{
+    unqfy.addTrack(idAlbum,{name:trackName,duration:parseInt(trackDuration),genres:trackGenre});
+  }
+  catch(e){
+    if(e.name ==="TrackExistError" ){
+      handleError(e)
+    }
+    else{
+      throw e
+    }
+  }
     saveUNQfy(unqfy)
 }
 
 function removeTrack(unqfy,trackName,artistName){
 
-  try{
+
     unqfy.removeTrack(trackName,artistName)
-  }catch(e){
-    if(e.name === "TrackDontExistError"){
-      handleError(e)
-    }else{
-      throw e
-    }
-  }
+
   saveUNQfy(unqfy)
 }
+
 function getTracksByAlbum(unqfy,albumid){
 
   console.log(unqfy.getTracksByAlbum(albumid))
 }
 
+function getPlaylists(unqfy){
+
+  console.log(unqfy.playlists)
+}
 function main() {
   console.log('arguments: ');
   process.argv.forEach(argument => console.log(argument));
@@ -210,7 +201,7 @@ function main() {
   }
   if (commandName == 'createPlaylist'){
 
-    return createPlaylist(unqfy,arguments_[1], arguments_[2], arguments_.slice(3));
+    return createPlaylist(unqfy,arguments_[1], arguments_.slice(2), arguments_[3]);
   }
 
   if(commandName == 'removeAlbum'){
@@ -243,6 +234,10 @@ function main() {
   if(commandName == 'getTracksByAlbum'){
 
     return getTracksByAlbum(unqfy,arguments_[1]);
+  }
+  if(commandName == 'getPlaylists'){
+
+    return getPlaylists(unqfy);
   }
 
   

@@ -155,7 +155,7 @@ class UNQfy {
       return this.getArtistByName(artistName).getTracks(); 
         }
         else {
-          throw Error('There is no artist with that name');
+          throw new ArtistExistError();
         }
 
   }
