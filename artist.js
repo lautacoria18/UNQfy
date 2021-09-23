@@ -1,4 +1,4 @@
-const IdGenerator= require('./idGenerator') // para cargar track.js
+const IdGenerator= require('./idGenerator') // para cargar idGenerator.js
 class Artist{
  
     
@@ -8,7 +8,7 @@ constructor(artistData, newId){
     if (artistData !== undefined){
     this.name=artistData.name;
     this.country=artistData.country;
-    this.id= newId; //estaba el 12
+    this.id= newId; 
     this.albums= [];
     }
 }
@@ -24,7 +24,7 @@ removeAlbum(albumName){
   this.albums=  this.albums.filter(album => album.name !== albumName);
 }
 
-getTracks(){ //este metodo no deberia estar aca
+getTracks(){ 
 
     
     let totalTracks=[];
