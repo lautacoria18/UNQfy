@@ -1,3 +1,7 @@
+![Seminarios visado 1](https://user-images.githubusercontent.com/42523128/134589249-fcb550d2-f5e1-451f-a903-8810070ea719.jpg)
+
+
+
 # Instrucciones para el uso de comandos
 
 
