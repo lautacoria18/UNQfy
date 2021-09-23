@@ -169,10 +169,7 @@ function getTracksByAlbum(unqfy,albumid){
   console.log(unqfy.getTracksByAlbum(albumid))
 }
 
-function getPlaylists(unqfy){
 
-  console.log(unqfy.playlists)
-}
 function main() {
   console.log('arguments: ');
   process.argv.forEach(argument => console.log(argument));
@@ -235,10 +232,7 @@ function main() {
 
     return getTracksByAlbum(unqfy,arguments_[1]);
   }
-  if(commandName == 'getPlaylists'){
 
-    return getPlaylists(unqfy);
-  }
 
   
 
