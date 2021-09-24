@@ -53,7 +53,7 @@ class UNQfy {
     }
   }
    else{
-    throw Error('The artist is not registered');
+    console.log('The artist is not registered');
    }
     }
   
@@ -258,7 +258,7 @@ class UNQfy {
         this.playlists.forEach(playlist => playlist.removeTrack(trackName));  //listo
         console.log('The track ' + trackName + ' has been deleted!');
       }else{
-        throw Error('The track is not registered');
+        console.log('The track is not registered');
       }
     }
   }
@@ -273,7 +273,7 @@ class UNQfy {
       console.log('The artist ' + artistName + ' has been deleted!');
     }
     else{
-      throw Error('The artist is not registered!'); //ok
+     console.log('The artist is not registered!'); //ok
     }
 
 
@@ -294,7 +294,7 @@ class UNQfy {
         }
         else {
 
-          throw Error ('The album is not registered!')
+         console.log('The album is not registered!')
         }
 
 
@@ -310,7 +310,7 @@ class UNQfy {
       this.playlists = this.playlists.filter(playlist => playlist.id !== id)
       console.log('The playlist ' + playlist.name + ' has been deleted!');
     }else{
-      throw Error('The playlist is not registered'); 
+      console.log('The playlist is not registered'); 
     }
   }
 

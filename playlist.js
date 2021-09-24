@@ -25,7 +25,7 @@ hasTrack(track){
 addTrack(track){
     if(!this.hasTrack(track)){
         let cDuration = this.duration() + track.duration;
-        if(cDuration < this.maxDuration){
+        if(cDuration <= this.maxDuration){
             this.tracks.push(track);
             this.currentDuration = cDuration;
         }else{

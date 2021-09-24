@@ -31,9 +31,7 @@ getTracks(){
 
     this.albums.forEach(album => totalTracks= totalTracks.concat(album.tracks));
 
-    //return this.albums.map(album => album.tracks).reduce((a,b) => {
-      //  return a.concat(b)
-      //})
+
 
     return totalTracks;
 }
