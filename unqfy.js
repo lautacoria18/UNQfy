@@ -1,4 +1,3 @@
-
 const picklify = require('picklify'); // para cargar/guarfar unqfy
 const fs = require('fs'); // para cargar/guarfar unqfy
 const Artist= require('./artist') // para cargar artist.js
@@ -8,6 +7,10 @@ const Playlist= require('./playlist') // para  cargar playlist.js
 const IdGenerator= require('./idGenerator') //para cargar idGenerator.js
 const ArtistExistError= require('./artistExistError') // para cargar artistExistError
 const TrackExistError= require('./trackExistError') // para cargar trackExistError
+const ArtistNotExistError = require('./artistNotExistError') // para cargar artistNotExistError
+const AlbumExistError = require('./albumExistError') //para cargar albumExistError
+const AlbumNotExistError = require('./albumNotExistError') // para cargar albumNotExistError
+const rp = require('request-promise') // para cargar los request
 
 
 class UNQfy {
@@ -45,15 +48,19 @@ class UNQfy {
 
     if (artist !== undefined){
       if(!artist.existAlbum(albumData.name)){
-      const album= new Album(albumData, this.idGenerator.getAlbumId());
+      const album= new Album(albumData, this.idGenerator.getAlbumId(), artistId);
 
       artist.addNewAlbum(album);
-      return album;
+      return (album);
       console.log("The new album " + album.name + " has registered with succes!."); 
+    }
+    else {
+          throw new AlbumExistError();
     }
   }
    else{
-    console.log('The artist is not registered');
+
+    throw new ArtistNotExistError();
    }
     }
   
@@ -66,10 +73,12 @@ class UNQfy {
   // retorna: el nuevo track creado
   addTrack(albumId, trackData) {
     let album= this.getAlbumById(albumId);
-
+    let artistOfTrackId= album.artistID;
+    let artistOfTrack= this.getArtistById(artistOfTrackId);
+    let artistName= artistOfTrack.name;
     if(album !== undefined){
       if(!album.existTrack(trackData.name)){
-        let track= new Track(trackData, this.idGenerator.getTrackId(), albumId);
+        let track= new Track(trackData, this.idGenerator.getTrackId(), albumId, artistName);
         album.addNewTrack(track);
         return track;
         console.log("The new song " + track.name + " has registered with succes!.");
@@ -97,7 +106,10 @@ class UNQfy {
       return artist;
     }
     else{
-      console.log("There is no artist with that ID")
+      throw Error;
+
+      //error de artista que no existe
+      //console.log("There is no artist with that ID" + id)
     }
   }
 
@@ -109,20 +121,21 @@ class UNQfy {
     if(album !== undefined){
       return album
     }else{
-      console.log ("There is no album with that ID");
+
+      throw new AlbumNotExistError();
     }
 
   }
 
-  getTrackById(id) {
+  getTrackById(idG) {
 
-    let tracks= this.getAllTracks()
-    let track = tracks.find(track => track.id === id)
-    if (track !== undefined){
-    return track;
+    let tracks= this.getAllTracks(); //esta aca el problema?
+    let trackSelected = tracks.find(track => track.id == idG);
+    if (trackSelected !== undefined){
+    return trackSelected;
     }
     else{
-      console.log("There is no track with that ID");
+      throw Error("There is no track with that ID: " + idG);
     }
   }
 
@@ -134,7 +147,7 @@ class UNQfy {
     return playlist;
     }
     else{
-      console.log("There is no playlist with that ID");
+      console.log("There is no playlist with that ID: " + id);
     }
   }
 
@@ -155,7 +168,7 @@ class UNQfy {
       return this.getArtistByName(artistName).getTracks(); 
         }
         else {
-          throw new ArtistExistError();
+          //throw new ArtistExistError();
         }
 
   }
@@ -202,11 +215,10 @@ class UNQfy {
 
   getAllTracks() {
 
-    let totalTracks=[];
-
-    this.getAllAlbums().forEach(album => totalTracks= totalTracks.concat(album.tracks));
-
-    return totalTracks;
+    //return this.getAllAlbums()[0].tracks
+    return this.getAllAlbums().map(album => album.tracks).reduce((a,b) =>{
+      return a.concat(b)
+    })
   }
 
   searchByName(word){
@@ -224,14 +236,14 @@ class UNQfy {
 
   searchAlbumsByName(word){
 
-    let albums = this.getAllAlbums().filter(album => album.name.includes(word));
+    let albums = this.getAllAlbums().filter(album => album.name.toLowerCase().includes(word));
 
     return albums;
   }
 
   searchArtistsByName(word){
 
-    let artists= this.artists.filter(artist=> artist.name.includes(word));
+    let artists= this.artists.filter(artist=> artist.name.toLowerCase().includes(word));
 
     return artists;
 
@@ -255,7 +267,7 @@ class UNQfy {
       let album = artist.findAlbumWithTrackName(trackName);
       if(album !== undefined){
         album.removeTrack(trackName);
-        this.playlists.forEach(playlist => playlist.removeTrack(trackName));  //listo
+        this.playlists.forEach(playlist => playlist.removeTrack(trackName)); 
         console.log('The track ' + trackName + ' has been deleted!');
       }else{
         console.log('The track is not registered');
@@ -288,13 +300,14 @@ class UNQfy {
         if (album !== undefined){
 
           artist.removeAlbum(albumName); //listo
-          album.tracks.forEach(track => this.removeTrack(artistName, track.name));
+          //album.tracks.forEach(track => this.removeTrack(artistName, track.name));
+          this.playlists.map(playlist => playlist.deleteTracks(album.tracks))
           console.log('The album '+ albumName + ' has been deleted!')
           
         }
         else {
 
-         console.log('The album is not registered!')
+         throw console.error("algo salio mal")
         }
 
 
@@ -316,7 +329,7 @@ class UNQfy {
 
 getMostImportantPlaylist(artist){
 
-  let allSongsFromArtist= this.getTracksMatchingArtist(artist.name);
+let allSongsFromArtist= this.getTracksMatchingArtist(artist.name);
 
  let songsMostPlayed = allSongsFromArtist.sort((a, b) => b.timesPlayed - a.timesPlayed);
 
@@ -342,8 +355,106 @@ getMostImportantPlaylist(artist){
  }
 
 
+ //Visado 2
 
+
+ populateAlbumsForArtist(artistName){
+
+  const options = {
+    url: 'https://api.spotify.com/v1/search', //endpoint
+    headers: { Authorization: 'Bearer ' +
+     'BQB1DbNKKXYla_da_6k_VMGoH7uDLXaWO5xiGSr_eHZHk4dqHk2JDzt0fJaED9VvPVELbdltVxlGZlk-y_2jWvKx8xTv3JLwFazyOhRxQNaJo9jP_G_Fc3prQueQGaaDLCNu1xKxFs3HvVyLp0er-c_Ec3RVK7-G' }, //el token que tengo en las credenciales
+    json: true, 
+    qs: {
+      q: artistName, //la clave artista
+      limit: 1, //Limite de 1
+      type: 'artist' //el tipo que tengo que buscar
+    }
+};
+rp.get(options).then((response) => { 
+  let idFromArtistName= response.artists.items[0].id;
+  console.log('This is the ID: ' + idFromArtistName + ' from the artist ' + artistName);
+  this.syncronizeAlbumsForArtist(artistName, idFromArtistName); 
+ })
+
+ }
+
+ syncronizeAlbumsForArtist(artistName, artistIDSpotify){
+
+  const options = {
+    url: 'https://api.spotify.com/v1/artists/'+ artistIDSpotify + '/albums',
+    headers: { Authorization: 'Bearer ' +
+    'BQB1DbNKKXYla_da_6k_VMGoH7uDLXaWO5xiGSr_eHZHk4dqHk2JDzt0fJaED9VvPVELbdltVxlGZlk-y_2jWvKx8xTv3JLwFazyOhRxQNaJo9jP_G_Fc3prQueQGaaDLCNu1xKxFs3HvVyLp0er-c_Ec3RVK7-G' },
+    json: true
+  }
+  rp.get(options).then((response)=>{
+    let albums = [...new Set(response.items)] //modificar
+    this.addAlbumsToArtist(artistName,albums);
+  })
+ }
+
+ addAlbumsToArtist(artistName,albums){
   
+  let artist= this.getArtistByName(artistName);
+
+  if (artist !== undefined){
+
+
+      albums.map(album => artist.addNewAlbum(new Album({name:album.name, year: album.release_date.slice(0,4)}, this.idGenerator.getAlbumId())));
+      console.log('Se agregaron los albumes al artista con exito')
+
+  }
+  else{
+
+    console.log('Hubo un error'); //modificar esto
+  }
+}
+
+updateArtist(artistId,artistData){
+
+let artist=  this.getArtistById(artistId);
+
+if (artist !== undefined){
+
+  artist.name= artistData.name;
+  artist.country= artistData.country;
+  console.log('The artist has been update succesfully!')
+  return artist;
+  
+
+}
+
+
+}
+
+
+updateAlbum(albumID, albumYear){
+
+    let album= this.getAlbumById(albumID);
+
+    if (album !== undefined){
+
+      album.year= albumYear;
+      console.log('The year of the album has been updated succesfully!')
+      return album;
+    }
+
+
+}
+
+getLyricsFromID(trackID){
+
+
+  let track = this.getTrackById(trackID);
+
+  return track.getLyrics();
+
+}
+
+addPlaylist(playlist){
+
+  this.playlists.push(playlist);
+}
 
   save(filename) {
     const serializedData = picklify.picklify(this);

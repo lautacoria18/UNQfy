@@ -43,11 +43,26 @@ removeTrack(trackName){
 
 }
 
-deleteTracks(tracksArtist){
+deleteTracks(tracks){
 
 
-    tracksArtist.forEach(track => this.removeTrack(track.name));
+    tracks.forEach(track => this.removeTrack(track.name));
 }
+
+addTracks(tracks){
+
+    for(let track of tracks){
+        this.addTrack(track)
+     }
+}
+toJSON(){
+    return ({
+       id: this.id,
+       name: this.name,
+       duration: this.duration(),
+       tracks: this.tracks
+    })
+ }
 
 
 }

@@ -1,22 +1,35 @@
 {
-  "name": "unqfy",
+  "name": "apiunqfy.js",
   "version": "1.0.0",
-  "description": "",
+  "description": "![Seminarios visado 1](https://user-images.githubusercontent.com/42523128/134589249-fcb550d2-f5e1-451f-a903-8810070ea719.jpg)",
   "main": "main.js",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "chai": "^4.1.2",
-    "picklify": "github:lwoites/picklify"
+    "express": "^4.17.1",
+    "express-json-validator-middleware": "^2.2.1",
+    "picklify": "github:lwoites/picklify",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
+    "eslint": "^8.0.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.10.0",
-    "mocha": "^5.0.5"
+    "mocha": "^9.1.3"
   },
   "scripts": {
     "test": "mocha",
-    "eslint": "node_modules/.bin/eslint *.js"
+    "eslint": "eslint *.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lautacoria18/UNQfy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lautacoria18/UNQfy/issues"
+  },
+  "homepage": "https://github.com/lautacoria18/UNQfy#readme"
 }

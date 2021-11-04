@@ -46,6 +46,15 @@ findAlbumWithTrackName(trackName){
   return this.albums.find(album => album.existTrack(trackName));
 }
 
+toJSON() {
+  return {
+      id: this.id,
+      name: this.name,
+      albums: this.albums,
+      country: this.country,
+  }
+}
+
 
 
 }

@@ -97,7 +97,7 @@ function removeArtist(unqfy,artistName){
 
 function createPlaylist(unqfy,name,genresToInclude, maxDuration){
   
-  unqfy.createPlaylist(name,genresToInclude,maxDuration)
+  unqfy.createPlaylist(name,genresToInclude,maxDuration);
   saveUNQfy(unqfy)
 }
 
@@ -158,7 +158,7 @@ function addTrack(unqfy,idAlbum,trackName,trackDuration,trackGenre){
 
 function removeTrack(unqfy,trackName,artistName){
 
-
+    
     unqfy.removeTrack(trackName,artistName)
 
   saveUNQfy(unqfy)
@@ -168,7 +168,17 @@ function getTracksByAlbum(unqfy,albumid){
 
   console.log(unqfy.getTracksByAlbum(albumid))
 }
+function getPlatylists(unqfy){
 
+  console.log(unqfy.playlists);
+  saveUNQfy(unqfy)
+ }
+
+ function getAllTracks(unqfy) {
+   
+  console.log(unqfy.getAllTracks());
+  saveUNQfy(unqfy)
+ }
 
 function main() {
   console.log('arguments: ');
@@ -221,7 +231,7 @@ function main() {
   }
   if (commandName == 'addTrack'){
 
-    return addTrack(unqfy,arguments_[1], arguments_[2], arguments_[3], arguments_[4]);
+    return addTrack(unqfy,arguments_[1], arguments_[2], arguments_[3], arguments_.slice(4));
   }
   if (commandName == 'removeTrack'){
 
@@ -232,7 +242,14 @@ function main() {
 
     return getTracksByAlbum(unqfy,arguments_[1]);
   }
+  if(commandName == 'getPlaylists'){
 
+    return getPlatylists(unqfy);
+  }
+
+  if(commandName == 'getAllTracks'){
+    return getAllTracks(unqfy);
+  }
 
   
 

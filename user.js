@@ -5,7 +5,6 @@ class User{
 
         this.songsListened = new Map();
 
-
     }
 
 playATrack(track){
@@ -16,7 +15,6 @@ playATrack(track){
         this.songsListened.set(track.name, timesListened + 1);
         track.play();
 
-
     }
     else{
         this.songsListened.set(track.name, 1);
@@ -26,8 +24,7 @@ playATrack(track){
 
 getListenedTracks(){
 
-return Array.from( this.songsListened.keys() );
-
+    return Array.from( this.songsListened.keys() );
 
 }
 

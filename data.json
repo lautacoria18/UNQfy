@@ -7,34 +7,21 @@
   ],
   "objects": {
     "__00001__": {
-      "artists": "__00002__",
+      "artists": "__00001__",
       "playlists": "__00003__",
       "idGenerator": "__00004__"
     },
-    "__00002__": {
-      "0": "__00005__"
-    },
     "__00003__": {},
     "__00004__": {
-      "userId": 1,
-      "songId": 0,
+      "userId": 2,
+      "trackId": 1,
       "playlistId": 0,
-      "albumId": 0
-    },
-    "__00005__": {
-      "name": "Los redondos",
-      "country": "Argentina",
-      "id": 1,
-      "albums": "__00006__"
-    },
-    "__00006__": {}
+      "albumId": 2
+    }
   },
   "types": {
     "__00001__": "UNQfy",
-    "__00002__": "Array",
     "__00003__": "Array",
-    "__00004__": "IdGenerator",
-    "__00005__": "Artist",
-    "__00006__": "Array"
+    "__00004__": "IdGenerator"
   }
 }

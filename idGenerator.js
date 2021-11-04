@@ -2,7 +2,7 @@ class IdGenerator {
 
 constructor(){
      this.userId = 0
-     this.songId = 0
+     this.trackId = 0
      this.playlistId = 0
      this.albumId= 0;
 }
