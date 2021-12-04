@@ -11,8 +11,10 @@ const ArtistNotExistError = require('./artistNotExistError') // para cargar arti
 const AlbumExistError = require('./albumExistError') //para cargar albumExistError
 const AlbumNotExistError = require('./albumNotExistError') // para cargar albumNotExistError
 const rp = require('request-promise') // para cargar los request
-
-
+const sendNotify = require('./Logging/notifyLogging') //para cargar el notifyLogging
+const Observer = require('./observer') //para cargar observer
+const ObserverLogging = require ('./observerLogging')
+const ObserverNewsletter = require ('./observerNewsletter');
 class UNQfy {
 
 
@@ -21,18 +23,99 @@ class UNQfy {
     this.artists= [];
     this.playlists=[];
     this.idGenerator= new IdGenerator();
+    this.observers= [];
   }
 
+  addObserver(observer){
+
+    this.observers.push(observer);
+
+  }
+
+  removeObserver(){
+    this.observers = [];
+  }
+
+
+
+  notifyObservers(objeto, name, evento){
+
+    let listeners = this.observers;
+  
+    if (listeners !== undefined){
+  
+    listeners.forEach(listener => listener.notify(objeto, name, evento));
+    }
+  
+  }
+
+
+  removeObserverFromArtist(artistID, email){
+
+    let artist= this.getArtistById(artistID);
+
+    if (artist !== undefined){
+
+      console.log("hola");
+    artist.removeObserver(email);
+    
+    }
+
+  }
+
+  addObserverToArtist(email, id){
+
+    let newObserver = new ObserverNewsletter(email);
+    let artist=this.getArtistById(id);
+
+    if (artist !== undefined){
+    artist.addObserver(newObserver);
+    }
+  }
+
+  removeObserverFromArtist(artistID, email){
+
+    let artist= this.getArtistById(artistID);
+
+    if (artist !== undefined){
+
+      console.log("hola");
+    artist.removeObserver(email);
+    
+    }
+
+  }
+
+  removeAllObserverFromArtist(artistID){
+
+    let artist= this.getArtistById(artistID);
+
+    if (artist !== undefined){
+
+      console.log("hola");
+    artist.removeAllObserver();
+    
+    
+    }
+
+    }
+
+
+
+ 
   addArtist(artistData) {
 
     if (!this.artistExist(artistData.name)){
 
       const artist= new Artist(artistData, this.idGenerator.getUserId());
       this.artists.push(artist);
-      return(artist);
       console.log("The new artist " + artist.name + " has registered with succes!.");
+      this.notifyObservers(artist, '', 'artistaNuevo');
+      return(artist);
+
     }
     else{
+      this.notifyObservers(artistData, '', 'errorArtistaExiste');
       throw new ArtistExistError(); 
    }
   }
@@ -51,15 +134,18 @@ class UNQfy {
       const album= new Album(albumData, this.idGenerator.getAlbumId(), artistId);
 
       artist.addNewAlbum(album);
-      return (album);
       console.log("The new album " + album.name + " has registered with succes!."); 
+      this.notifyObservers(album, artist.name, 'albumNuevo');
+      return (album);
+
     }
     else {
+          this.notifyObservers(albumData, '', 'errorAlbumExiste');
           throw new AlbumExistError();
     }
   }
    else{
-
+    this.notifyObservers(albumData, '', 'errorArtistaNoExiste');
     throw new ArtistNotExistError();
    }
     }
@@ -80,15 +166,18 @@ class UNQfy {
       if(!album.existTrack(trackData.name)){
         let track= new Track(trackData, this.idGenerator.getTrackId(), albumId, artistName);
         album.addNewTrack(track);
-        return track;
         console.log("The new song " + track.name + " has registered with succes!.");
+        this.notifyObservers(track, album.name, 'trackNuevo');
+        return track;
+        
                                           }
       else{
+        this.notifyObservers(trackData, '', 'errorTrackExiste');
         throw new TrackExistError();
     }
   }
     else{
-
+      this.notifyObservers(trackData, '', 'errorAlbumNoExiste');
       console.log("The album is not registered in the system!")
     }
   /* Crea un track y lo agrega al album con id albumId.
@@ -106,7 +195,7 @@ class UNQfy {
       return artist;
     }
     else{
-      throw Error;
+      //throw Error;
 
       //error de artista que no existe
       //console.log("There is no artist with that ID" + id)
@@ -269,8 +358,10 @@ class UNQfy {
         album.removeTrack(trackName);
         this.playlists.forEach(playlist => playlist.removeTrack(trackName)); 
         console.log('The track ' + trackName + ' has been deleted!');
+        this.notifyObservers(album, trackName, 'trackEliminado');
       }else{
         console.log('The track is not registered');
+        this.notifyObservers(null, trackName, 'errorTrackEliminado');
       }
     }
   }
@@ -278,14 +369,17 @@ class UNQfy {
 
   removeArtist(artistName){
 
-    if (this.artistExist(artistName)){
 
+    if (this.artistExist(artistName)){
+      let artist = this.getArtistByName(artistName);
       this.artists= this.artists.filter(artist => artist.name !== artistName);
       this.playlists.forEach(playlist => playlist.deleteTracks(this.getTracksMatchingArtist(artistName)));
       console.log('The artist ' + artistName + ' has been deleted!');
+      this.notifyObservers(artist.name, '', 'artistaEliminado');
     }
     else{
      console.log('The artist is not registered!'); //ok
+     this.notifyObservers(null, artistName, 'errorArtistaEliminado');
     }
 
 
@@ -300,14 +394,14 @@ class UNQfy {
         if (album !== undefined){
 
           artist.removeAlbum(albumName); //listo
-          //album.tracks.forEach(track => this.removeTrack(artistName, track.name));
           this.playlists.map(playlist => playlist.deleteTracks(album.tracks))
-          console.log('The album '+ albumName + ' has been deleted!')
+          console.log('The album '+ albumName + ' has been deleted!');
+          this.notifyObservers(album.name, '', 'albumEliminado');
           
         }
         else {
-
-         throw console.error("algo salio mal")
+          this.notifyObservers(null, albumName, 'errorAlbumEliminado');
+         throw console.error("algo salio mal");
         }
 
 
@@ -388,7 +482,7 @@ rp.get(options).then((response) => {
     json: true
   }
   rp.get(options).then((response)=>{
-    let albums = [...new Set(response.items)] //modificar
+    let albums = [...new Set(response.items)] 
     this.addAlbumsToArtist(artistName,albums);
   })
  }

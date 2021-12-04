@@ -180,6 +180,12 @@ function getPlatylists(unqfy){
   saveUNQfy(unqfy)
  }
 
+ function albumsFor(unqfy, artistName) {
+  console.log(unqfy.populateAlbumsForArtist(artistName));
+  saveUNQfy(unqfy)
+
+ }
+
 function main() {
   console.log('arguments: ');
   process.argv.forEach(argument => console.log(argument));
@@ -249,6 +255,10 @@ function main() {
 
   if(commandName == 'getAllTracks'){
     return getAllTracks(unqfy);
+  }
+  if(commandName == 'albumsFor') {
+
+    return albumsFor(unqfy,arguments_[1]);
   }
 
   
